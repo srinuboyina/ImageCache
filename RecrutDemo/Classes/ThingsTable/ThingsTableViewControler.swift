@@ -3,6 +3,7 @@ import UIKit
 
 class ThingsTableViewControler: UITableViewController, Transition {
     
+    var selectedIndex = IndexPath(row: -1, section: -1)
     struct TableViewConstants {
         
         static let cellIdentifier = "Cell"
@@ -22,11 +23,12 @@ class ThingsTableViewControler: UITableViewController, Transition {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "Things"
+        tableView.register(ThingCell.self, forCellReuseIdentifier: "Cell")
         tableView.estimatedRowHeight = TableViewConstants.estimatedRowHeight
         tableView.rowHeight = TableViewConstants.rowHeight
         tableView.separatorColor = UIColor.black
-        tableView.separatorStyle = .singleLine
+        tableView.separatorStyle = .none
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,28 +37,14 @@ class ThingsTableViewControler: UITableViewController, Transition {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell: ThingCell? = tableView.dequeueReusableCell(withIdentifier: TableViewConstants.cellIdentifier) as? ThingCell
-        
-        if cell == nil {
-            cell = ThingCell()
-        }
-        viewModel.bindModelWithView(cell: cell!, at: indexPath)
-        
-        let thingModel = viewModel.thing(for: indexPath)
-        cell?.update(withText: thingModel.name)
-        cell?.update(withLikeValue: thingModel.like)
-        
-        if let urlString = thingModel.image {
-            viewModel.imageProvider.imageAsync(from: urlString, completion: { (image, imageUrl) in
-                cell?.updateThingImage(image)
-            })
-        }
-        
+        let cell: ThingCell? = tableView.dequeueReusableCell(withIdentifier: TableViewConstants.cellIdentifier) as? ThingCell
+        let thing = viewModel.things[indexPath.row]
+        cell?.setData(model: thing)
         return cell!
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        selectedIndex = indexPath
         tableView.deselectRow(at: indexPath, animated: true)
         let thingModel = viewModel.thing(for: indexPath)
         pushDetailsViewController(thingModel)
@@ -66,29 +54,15 @@ class ThingsTableViewControler: UITableViewController, Transition {
         
         let detailsViewController = ThingDetailsViewController()
         detailsViewController.thingModel = thingModel
-        detailsViewController.imageProvider = viewModel.imageProvider
         detailsViewController.delegate = self
-        let navigationContorller = UINavigationController(rootViewController: detailsViewController)
-        pushViewControler(navigationContorller, animated: true)
+        self.navigationController?.pushViewController(detailsViewController, animated: true)
     }
 }
 
 extension ThingsTableViewControler: ThingDetailsDelegate {
 
-    func thingDetails(viewController: ThingDetailsViewController, didLike thingModel: inout ThingModel) {
-        
-        thingModel.setLike(value: true)
-        popViewController(viewController, animated: true)
-    }
-    
-    func thingDetails(viewController: ThingDetailsViewController, didDislike thingModel: inout ThingModel) {
-        
-        thingModel.setLike(value: false)
-        popViewController(viewController, animated: true)
-    }
-    
-    func thingDetails(viewController: ThingDetailsViewController, willDismiss thingModel: inout ThingModel) {
-        popViewController(viewController, animated: true)
+    func updateData() {
+        tableView.reloadRows(at: [selectedIndex], with: .none)
     }
 }
 

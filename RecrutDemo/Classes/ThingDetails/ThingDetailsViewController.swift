@@ -1,55 +1,54 @@
 import Foundation
 import UIKit
+import SDWebImage
 
 class ThingDetailsViewController: UIViewController {
     
     private let baseView = ThingDetailsView()
     var thingModel: ThingModel!
-    var imageProvider: ImageProvider!
-    var delegate: ThingDetailsDelegate? = nil
+    weak var delegate: ThingDetailsDelegate? = nil
     
     convenience init() {
         self.init(nibName: nil, bundle: nil)
     }
     
     override func loadView() {
-        
         view = baseView
         view.backgroundColor = UIColor.white
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        title = thingModel.name
         
-        baseView.likeButton.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
-        baseView.dislikeButton.addTarget(self, action: #selector(didTapDislikeButton), for: .touchUpInside)
-        setup()
-        displayImage()
+        if let thingModel = thingModel {
+            title = thingModel.name
+            
+            baseView.likeButton.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
+            baseView.dislikeButton.addTarget(self, action: #selector(didTapDislikeButton), for: .touchUpInside)
+            displayImage()
+        }
     }
     
     @objc func didTapCloseButton() {
-        delegate?.thingDetails(viewController: self, willDismiss: &thingModel!)
+        //delegate?.thingDetails(viewController: self, willDismiss: &thingModel!)
     }
     
     @objc func didTapLikeButton() {
-        delegate?.thingDetails(viewController: self, didLike: &thingModel!)
+        thingModel.like = .like
+        self.navigationController?.popViewController(animated: true)
+        delegate?.updateData()
     }
+    
     @objc
     func didTapDislikeButton() {
-        delegate?.thingDetails(viewController: self, didDislike: &thingModel!)
+        thingModel.like = .unlike
+        self.navigationController?.popViewController(animated: true)
+        delegate?.updateData()
     }
     
     func displayImage() {
-        
-        if let urlString = thingModel.image {
-            imageProvider.imageAsync(from: urlString, completion: { (image, imageUrl) in
-                self.baseView.setThing(image: image)
-            })
-        }
+        baseView.setThing(image: thingModel.image)
     }
 }
-
 
 
