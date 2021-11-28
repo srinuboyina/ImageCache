@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import SDWebImage
 
 class ThingDetailsView: UIView {
     
@@ -64,8 +65,10 @@ class ThingDetailsView: UIView {
         buttons.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0.0).isActive = true
     }
     
-    func setThing(image: UIImage?) {
-        imageView.image = image
+    func setThing(image: String?) {
+        if let urlString = image, let url = URL(string: urlString) {
+            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder.png"))
+        }
     }
 }
 
