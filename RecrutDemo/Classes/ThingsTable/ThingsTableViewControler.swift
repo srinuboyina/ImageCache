@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class ThingsTableViewControler: UITableViewController, Transition {
+class ThingsTableViewControler: UITableViewController {
     
     var selectedIndex = IndexPath(row: -1, section: -1)
     struct TableViewConstants {
