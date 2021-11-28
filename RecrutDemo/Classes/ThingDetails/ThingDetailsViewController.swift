@@ -29,10 +29,6 @@ class ThingDetailsViewController: UIViewController {
         }
     }
     
-    @objc func didTapCloseButton() {
-        //delegate?.thingDetails(viewController: self, willDismiss: &thingModel!)
-    }
-    
     @objc func didTapLikeButton() {
         thingModel.like = .like
         self.navigationController?.popViewController(animated: true)
