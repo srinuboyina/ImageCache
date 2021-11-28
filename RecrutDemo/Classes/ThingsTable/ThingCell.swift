@@ -2,6 +2,12 @@ import Foundation
 import UIKit
 var count: Int = 0
 
+enum LikeStatus {
+    case like
+    case unlike
+    case none
+}
+
 class ThingCell: UITableViewCell {
     
     private let thingImage = UIImageView()
@@ -11,27 +17,37 @@ class ThingCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor.black
         label.backgroundColor = UIColor.clear
+        label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 20.0)
         return label
     }()
     
     let background = UIView(frame: .zero)
     var updateThingImage: ((UIImage?) -> (Void)) = { _ in }
-    var isLiked: Bool? = false {
-        
+    
+    func setData(model: ThingModel) {
+        nameLabel.text = model.name
+        like = model.like
+        updateImage(urlString: model.image ?? "")
+    }
+    
+    var like: LikeStatus? {
         willSet {
             self.updateLikeImage(check: newValue)
         }
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setView()
+    }
+    
+    func setView() {
         background.backgroundColor = UIColor(white: 0.9, alpha: 0.1)
         contentView.addSubview(background)
         
         thingImage.contentMode = .scaleAspectFit
-  
+        
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
         contentView.addSubview(nameLabel)
@@ -39,6 +55,12 @@ class ThingCell: UITableViewCell {
         contentView.addSubview(likeImage)
         addShadow()
     }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        setView()
+    }
+
     
     convenience init() {
         self.init(style: .default, reuseIdentifier: "")
@@ -82,37 +104,33 @@ class ThingCell: UITableViewCell {
         nameLabel.text = withText
     }
     
-    func update(withLikeValue: Bool?) {
-        isLiked = withLikeValue
+    func updateImage(urlString: String) {
+        if let url = URL(string: urlString) {
+            thingImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder.png"))
+        }
     }
     
-//    func animateAlphaLikeImage() {
-//        
-//        likeImage.alpha = 0.0
-//        UIView.animate(withDuration: 0.5) { 
-//            self.likeImage.alpha = 1.0
-//        }
-//    }
-    
-    func setLikeImageWithAnimation(image: UIImage) {
+    func setLikeImageWithAnimation(image: UIImage?) {
 
         change(image: image, in: likeImage)
     }
     
-    private func updateLikeImage(check: @autoclosure () -> Bool?) {
+    private func updateLikeImage(check: @autoclosure () -> LikeStatus?) {
         
-        if check() == true {
+        if check() == .like {
             setLikeImageWithAnimation(image: #imageLiteral(resourceName: "likeO96"))
         }
-        else if check() == false {
+        else if check() == .unlike {
             setLikeImageWithAnimation(image: #imageLiteral(resourceName: "dontlikeO96"))
+        } else {
+            setLikeImageWithAnimation(image: nil)
         }
     }
     
     private func change(image: UIImage?, in imageView: UIImageView, animated: Bool = true) {
         
         let transition = CATransition()
-        transition.duration = 0.8
+        transition.duration = 0.4
         transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
         transition.type = CATransitionType.fade
     

@@ -1,24 +1,20 @@
 import Foundation
 import UIKit
 
-struct ThingModel {
+class ThingModel {
     
     let name: String
-    var like: Bool?
+    var like: LikeStatus = .none
     var image: String?
     var type: String?
     var uuid: String?
-    var index: NSNumber?
-    var modelCell: ThingCell?
     
     init(name: String) {
         self.name = name
     }
     
-    mutating func setLike(value: Bool) {
-        
+    func setLike(value: LikeStatus) {
         like = value
-        modelCell?.update(withLikeValue: value)
     }
 }
 
