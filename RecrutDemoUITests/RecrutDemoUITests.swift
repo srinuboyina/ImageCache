@@ -1,5 +1,7 @@
 import XCTest
 
+
+
 class RecrutDemoUITests: XCTestCase {
         
     override func setUp() {
@@ -23,6 +25,18 @@ class RecrutDemoUITests: XCTestCase {
     func testExample() {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+    }
+    
+    func testApp() {
+        let app = XCUIApplication()
+        let tablesQuery = app.tables
+        tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["David Cameron"]/*[[".cells.staticTexts[\"David Cameron\"]",".staticTexts[\"David Cameron\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.buttons["likeO96"].tap()
+        tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["NHS"]/*[[".cells.staticTexts[\"NHS\"]",".staticTexts[\"NHS\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        let georgeButton = tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["George Osborne"]/*[[".cells.staticTexts[\"George Osborne\"]",".staticTexts[\"George Osborne\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        if georgeButton.waitForExistence(timeout: 5) {
+            georgeButton.tap()
+        }
     }
     
 }

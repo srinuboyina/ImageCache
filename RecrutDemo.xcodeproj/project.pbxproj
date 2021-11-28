@@ -620,7 +620,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yougov.RecrutDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecrutDemo.app/RecrutDemo";
 			};
 			name = Debug;
@@ -637,7 +637,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yougov.RecrutDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecrutDemo.app/RecrutDemo";
 			};
 			name = Release;
@@ -653,7 +653,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yougov.RecrutDemoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = RecrutDemo;
 			};
 			name = Debug;
@@ -669,7 +669,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yougov.RecrutDemoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = RecrutDemo;
 			};
 			name = Release;
